@@ -150,6 +150,11 @@ struct dynamic_bitset {
 
         data.swap(nd);
         nbits = new_bits;
+        // mask off extra bits in last word beyond logical size
+        if (!data.empty()) {
+            std::size_t rem = nbits % WORD_BITS;
+            if (rem) data.back() &= ((1ULL << rem) - 1);
+        }
         return *this;
     }
 
@@ -289,4 +294,3 @@ int main() {
     }
     return 0;
 }
-
